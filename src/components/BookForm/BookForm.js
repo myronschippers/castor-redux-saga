@@ -47,13 +47,13 @@ class BookForm extends Component {
             required
             placeholder="Title"
             value={this.state.newBook.title}
-            onChange={(event) => this.handleChangeFor('title', event)}
+            onChange={this.handleChangeFor('title')}
           />
           <input
             required
             placeholder="Author"
             value={this.state.newBook.author}
-            onChange={(event) => this.handleChangeFor('author', event)}
+            onChange={this.handleChangeFor('author')}
           />
           <button type="submit">Add Book</button>
         </form>
