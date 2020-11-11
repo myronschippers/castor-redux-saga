@@ -9,3 +9,8 @@
 .textCenter {
   text-align: center;
 }
+
+.errorMsg {
+  color: red;
+  font-weight: bold;
+}

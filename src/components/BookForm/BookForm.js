@@ -61,9 +61,15 @@ class BookForm extends Component {
           />
           <button type="submit">Add Book</button>
         </form>
+        {/* SHOW ERROR */}
+        {this.props.store.errorMessage != null && (
+          <p className="errorMsg">{this.props.store.errorMessage}</p>
+        )}
       </section>
     );
   }
 }
 
-export default connect()(BookForm);
+const mapStoreToProps = (store) => ({ store });
+
+export default connect(mapStoreToProps)(BookForm);

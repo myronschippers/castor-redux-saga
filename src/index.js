@@ -26,6 +26,16 @@ const bookList = (state = [], action) => {
   return state;
 };
 
+const errorMessage = (state = null, action) => {
+  if (action.type === 'ERROR_MSG') {
+    return action.payload;
+  } else if (action.type === 'ERROR_RESET') {
+    return null;
+  }
+
+  return state;
+};
+
 //
 // Saga Functions
 // ------------------------------
@@ -43,6 +53,7 @@ function* firstSaga(action) {
 
 function* getBooks(action) {
   try {
+    yield put({ type: 'ERROR_RESET' });
     const response = yield axios.get('/books');
     console.log(response.data);
     // version of a dispatch = put
@@ -52,6 +63,10 @@ function* getBooks(action) {
     });
   } catch (err) {
     console.log(err);
+    yield put({
+      type: 'ERROR_MSG',
+      payload: 'There was a problem loading books. Please try again.',
+    });
   }
   // .then((response) => {
   //   // setState => dispatch
@@ -69,6 +84,7 @@ function* getBooks(action) {
 
 function* postBook(action) {
   try {
+    yield put({ type: 'ERROR_RESET' });
     yield axios.post('/books', action.payload);
     // .then((response) => {
     //   this.props.getCallback();
@@ -82,6 +98,10 @@ function* postBook(action) {
     });
   } catch (err) {
     console.log(err);
+    yield put({
+      type: 'ERROR_MSG',
+      payload: "Sorry we couldn't save your book. Please try again.",
+    });
   }
 }
 
@@ -94,6 +114,7 @@ const storeInstance = createStore(
   // combines all of our reducer function to place in the store
   combineReducers({
     bookList,
+    errorMessage,
   }),
   applyMiddleware(logger, sagaMiddleware)
 );
