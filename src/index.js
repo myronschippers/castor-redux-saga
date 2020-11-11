@@ -34,6 +34,7 @@ function* watcherSaga() {
   // register all sagas
   yield takeLatest('FIRST_SAGA', firstSaga);
   yield takeLatest('GET_BOOKS', getBooks);
+  yield takeLatest('POST_BOOK', postBook);
 }
 
 function* firstSaga(action) {
@@ -64,6 +65,24 @@ function* getBooks(action) {
   //   // surface message to user
   //   alert('Something went terribly wrong.');
   // });
+}
+
+function* postBook(action) {
+  try {
+    yield axios.post('/books', action.payload);
+    // .then((response) => {
+    //   this.props.getCallback();
+    // })
+    // .catch((err) => {
+    //   console.log(err);
+    //   alert('Your book did not get saved, please try again.');
+    // });
+    yield put({
+      type: 'GET_BOOKS',
+    });
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 //
