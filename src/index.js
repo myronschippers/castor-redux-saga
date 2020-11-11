@@ -11,7 +11,7 @@ import logger from 'redux-logger';
 
 // SAGA
 import createSagaMiddleware from 'redux-saga';
-import { takeEvery, takeLatest } from 'redux-saga/effects';
+import { takeEvery, takeLatest, put } from 'redux-saga/effects';
 import axios from 'axios';
 
 //
@@ -44,6 +44,11 @@ function* getBooks(action) {
   try {
     const response = yield axios.get('/books');
     console.log(response.data);
+    // version of a dispatch = put
+    yield put({
+      type: 'SET_BOOKS',
+      payload: response.data,
+    });
   } catch (err) {
     console.log(err);
   }
