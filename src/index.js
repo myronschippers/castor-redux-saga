@@ -9,6 +9,10 @@ import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import logger from 'redux-logger';
 
+// SAGA
+import createSagaMiddleware from 'redux-saga';
+import { takeEvery, takeLatest } from 'redux-saga/effects';
+
 //
 // Redux Reducers
 // ------------------------------
@@ -22,16 +26,32 @@ const bookList = (state = [], action) => {
 };
 
 //
+// Saga Functions
+// ------------------------------
+
+function* watcherSaga() {
+  // register all sagas
+  yield takeEvery('FIRST_SAGA', firstSaga);
+}
+
+function* firstSaga(action) {
+  console.log('firstSaga run:', action);
+}
+
+//
 // Redux Setup
 // ------------------------------
 
+const sagaMiddleware = createSagaMiddleware();
 const storeInstance = createStore(
   // combines all of our reducer function to place in the store
   combineReducers({
     bookList,
   }),
-  applyMiddleware(logger)
+  applyMiddleware(logger, sagaMiddleware)
 );
+
+sagaMiddleware.run(watcherSaga);
 
 ReactDOM.render(
   <Provider store={storeInstance}>

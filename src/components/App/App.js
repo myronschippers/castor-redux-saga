@@ -30,11 +30,18 @@ class App extends Component {
       });
   };
 
+  handleClickRandom = () => {
+    this.props.dispatch({
+      type: 'FIRST_SAGA',
+    });
+  };
+
   render() {
     return (
       <div>
         <Header />
         <main className="container">
+          <button onClick={this.handleClickRandom}>Random</button>
           <BookForm getCallback={this.getAllBooks} />
           <BookList />
         </main>
