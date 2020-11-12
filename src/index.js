@@ -5,36 +5,15 @@ import App from './components/App/App';
 import reportWebVitals from './reportWebVitals';
 
 // Redux Dependencies
-import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import logger from 'redux-logger';
+import rootReducer from './redux/reducers/_root.reducer';
 
 // SAGA
 import createSagaMiddleware from 'redux-saga';
 import { takeEvery, takeLatest, put } from 'redux-saga/effects';
 import axios from 'axios';
-
-//
-// Redux Reducers
-// ------------------------------
-
-const bookList = (state = [], action) => {
-  if (action.type === 'SET_BOOKS') {
-    return action.payload;
-  }
-
-  return state;
-};
-
-const errorMessage = (state = null, action) => {
-  if (action.type === 'ERROR_MSG') {
-    return action.payload;
-  } else if (action.type === 'ERROR_RESET') {
-    return null;
-  }
-
-  return state;
-};
 
 //
 // Saga Functions
@@ -112,10 +91,7 @@ function* postBook(action) {
 const sagaMiddleware = createSagaMiddleware();
 const storeInstance = createStore(
   // combines all of our reducer function to place in the store
-  combineReducers({
-    bookList,
-    errorMessage,
-  }),
+  rootReducer,
   applyMiddleware(logger, sagaMiddleware)
 );
 
