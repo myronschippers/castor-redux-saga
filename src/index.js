@@ -12,77 +12,7 @@ import rootReducer from './redux/reducers/_root.reducer';
 
 // SAGA
 import createSagaMiddleware from 'redux-saga';
-import { takeEvery, takeLatest, put } from 'redux-saga/effects';
-import axios from 'axios';
-
-//
-// Saga Functions
-// ------------------------------
-
-function* watcherSaga() {
-  // register all sagas
-  yield takeLatest('FIRST_SAGA', firstSaga);
-  yield takeLatest('GET_BOOKS', getBooks);
-  yield takeLatest('POST_BOOK', postBook);
-}
-
-function* firstSaga(action) {
-  console.log('firstSaga run:', action);
-}
-
-function* getBooks(action) {
-  try {
-    yield put({ type: 'ERROR_RESET' });
-    const response = yield axios.get('/books');
-    console.log(response.data);
-    // version of a dispatch = put
-    yield put({
-      type: 'SET_BOOKS',
-      payload: response.data,
-    });
-  } catch (err) {
-    console.log(err);
-    yield put({
-      type: 'ERROR_MSG',
-      payload: 'There was a problem loading books. Please try again.',
-    });
-  }
-  // .then((response) => {
-  //   // setState => dispatch
-  //   this.props.dispatch({
-  //     type: 'SET_BOOKS',
-  //     payload: response.data,
-  //   });
-  // })
-  // .catch((err) => {
-  //   console.log(err);
-  //   // surface message to user
-  //   alert('Something went terribly wrong.');
-  // });
-}
-
-function* postBook(action) {
-  try {
-    yield put({ type: 'ERROR_RESET' });
-    yield axios.post('/books', action.payload);
-    // .then((response) => {
-    //   this.props.getCallback();
-    // })
-    // .catch((err) => {
-    //   console.log(err);
-    //   alert('Your book did not get saved, please try again.');
-    // });
-    yield put({
-      type: 'GET_BOOKS',
-    });
-  } catch (err) {
-    console.log(err);
-    yield put({
-      type: 'ERROR_MSG',
-      payload: "Sorry we couldn't save your book. Please try again.",
-    });
-  }
-}
+import rootSaga from './redux/sagas/_root.saga';
 
 //
 // Redux Setup
@@ -95,7 +25,7 @@ const storeInstance = createStore(
   applyMiddleware(logger, sagaMiddleware)
 );
 
-sagaMiddleware.run(watcherSaga);
+sagaMiddleware.run(rootSaga);
 
 ReactDOM.render(
   <Provider store={storeInstance}>
